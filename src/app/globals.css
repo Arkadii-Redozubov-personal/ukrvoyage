@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+:root {
+  --bg-canvas: #faf9f6;
+  --bg-surface: #ffffff;
+  --bg-tinted: #f1f3f7;
+  --bg-midnight: #0f1b2e;
+  --bg-midnight-card: #162640;
+  --bg-active-sand: #f7f3e3;
+
+  --brand-blue: #24508f;
+  --brand-blue-hover: #1b3e73;
+  --brand-blue-soft: #ebf1fa;
+  --brand-gold: #f2ce24;
+  --brand-gold-soft: #fdf6d3;
+
+  --ink-primary: #101828;
+  --ink-secondary: #475467;
+  --ink-muted: #667085;
+  --ink-on-dark: #f8fafc;
+  --ink-on-dark-muted: #a8b7ce;
+
+  --border-subtle: #e4e6ec;
+  --border-strong: #cbd2df;
+  --border-dark: #253652;
+
+  --status-error: #c42b1c;
+  --status-error-bg: #fef2f2;
+  --status-success: #127a4d;
+  --status-success-bg: #ecfdf3;
+}
+
+@theme inline {
+  --font-sans: var(--font-golos), "Golos Text", system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-unbounded), "Unbounded", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--ink-primary);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: var(--brand-blue);
+    color: #ffffff;
+  }
+
+  input,
+  textarea,
+  select {
+    caret-color: var(--brand-blue);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-canvas);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c7cfde;
+    border: 2px solid var(--bg-canvas);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-blue);
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.link-underline {
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
