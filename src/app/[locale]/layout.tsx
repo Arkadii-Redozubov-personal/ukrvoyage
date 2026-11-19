@@ -8,6 +8,7 @@ import { BookingDraftProvider } from "@/context/BookingDraftContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileStickyCta } from "@/components/MobileStickyCta";
+import { DesktopDemoPill } from "@/components/DesktopDemoPill";
 
 const unbounded = Unbounded({
   subsets: ["cyrillic", "latin"],
@@ -67,12 +68,13 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${unbounded.variable} ${golosText.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col bg-[#FAF9F6] text-[#101828]">
+      <body className="flex min-h-full flex-col bg-[#F8FAFD] text-[#101828]">
         <BookingDraftProvider>
           <Header locale={locale} dict={dict} />
           <main className="flex-1">{children}</main>
           <Footer locale={locale} dict={dict} />
           <MobileStickyCta locale={locale} dict={dict} />
+          <DesktopDemoPill locale={locale} dict={dict} />
         </BookingDraftProvider>
       </body>
     </html>

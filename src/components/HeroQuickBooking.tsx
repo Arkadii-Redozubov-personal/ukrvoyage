@@ -130,16 +130,16 @@ export function HeroQuickBooking({ locale, dict }: HeroQuickBookingProps) {
         className="rounded-[28px] border border-[#E6EEF8] bg-white p-4 shadow-[0_24px_60px_-20px_rgba(15,27,46,0.14),0_4px_14px_-4px_rgba(15,27,46,0.06)] sm:p-6 lg:px-7 lg:py-6"
       >
         {/* Row 1: Unified centered pills (Trip type + Geography) */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-2.5">
           <div
             role="group"
             aria-label={dict.bookingWizard.summaryCard.tripFormat}
-            className="flex flex-wrap items-center justify-center gap-2"
+            className="grid grid-cols-2 gap-1.5 sm:flex sm:items-center sm:justify-center sm:gap-2"
           >
             <button
               type="button"
               onClick={() => handleTripTypeChange("individual")}
-              className={`min-h-[40px] rounded-full px-5 text-sm font-semibold transition-colors ${
+              className={`min-h-[38px] rounded-full px-3 text-xs font-semibold transition-colors sm:min-h-[40px] sm:px-5 sm:text-sm ${
                 draft.tripType === "individual"
                   ? "bg-[#0D2347] text-white shadow-[0_2px_8px_rgba(13,35,71,0.18)]"
                   : "bg-[#EAF1FA] text-[#1D3557] hover:bg-[#DCE8F8]"
@@ -150,7 +150,7 @@ export function HeroQuickBooking({ locale, dict }: HeroQuickBookingProps) {
             <button
               type="button"
               onClick={() => handleTripTypeChange("group")}
-              className={`min-h-[40px] rounded-full px-5 text-sm font-semibold transition-colors ${
+              className={`min-h-[38px] rounded-full px-3 text-xs font-semibold transition-colors sm:min-h-[40px] sm:px-5 sm:text-sm ${
                 draft.tripType === "group"
                   ? "bg-[#0D2347] text-white shadow-[0_2px_8px_rgba(13,35,71,0.18)]"
                   : "bg-[#EAF1FA] text-[#1D3557] hover:bg-[#DCE8F8]"
@@ -163,14 +163,14 @@ export function HeroQuickBooking({ locale, dict }: HeroQuickBookingProps) {
           <div
             role="group"
             aria-label={dict.quickBooking.geographyLabel}
-            className="flex flex-wrap items-center justify-center gap-2"
+            className="grid grid-cols-3 gap-1.5 sm:flex sm:items-center sm:justify-center sm:gap-2"
           >
             {geographies.map((geo) => (
               <button
                 key={geo}
                 type="button"
                 onClick={() => updateDraft({ geography: geo })}
-                className={`min-h-[40px] rounded-full border px-5 text-sm transition-colors ${
+                className={`min-h-[38px] rounded-full border px-2 text-xs transition-colors sm:min-h-[40px] sm:px-5 sm:text-sm ${
                   draft.geography === geo
                     ? "border-[#1E4B94] bg-[#EEF4FD] font-semibold text-[#1E4B94]"
                     : "border-[#E4ECF6] bg-white font-medium text-[#283B5B] hover:border-[#BFD1EA] hover:bg-[#F7FAFE]"

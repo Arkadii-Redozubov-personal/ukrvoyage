@@ -26,13 +26,13 @@ export default async function ContactsPage({
   const dict = getDictionary(locale);
 
   return (
-    <section className="py-12 sm:py-16">
+    <section className="py-8 sm:py-12">
       <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 max-w-2xl">
-          <h1 className="font-display text-3xl font-semibold text-[#0F1B2E] sm:text-5xl">
+        <div className="mb-8 max-w-2xl">
+          <h1 className="font-display text-[26px] font-bold leading-[1.12] text-[#0D1E3B] sm:text-[36px] lg:text-[40px]">
             {dict.contactsPage.title}
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-[#475467] sm:text-lg">
+          <p className="mt-3 text-[15px] leading-relaxed text-[#475467] sm:text-base">
             {dict.contactsPage.lead}
           </p>
         </div>

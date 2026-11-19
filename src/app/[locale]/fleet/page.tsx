@@ -30,12 +30,12 @@ export default async function FleetPage({
 
   return (
     <>
-      <section className="border-b border-[#E4E6EC] bg-[#FAF9F6] py-12 sm:py-16">
+      <section className="border-b border-[#E6EDF7] bg-white py-8 sm:py-10">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
-          <h1 className="font-display max-w-3xl text-3xl font-semibold text-[#0F1B2E] sm:text-5xl">
+          <h1 className="font-display max-w-3xl text-[26px] font-bold leading-[1.12] text-[#0D1E3B] sm:text-[36px] lg:text-[40px]">
             {dict.fleetPage.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#475467] sm:text-lg">
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[#475467] sm:text-base">
             {dict.fleetPage.lead}
           </p>
         </div>

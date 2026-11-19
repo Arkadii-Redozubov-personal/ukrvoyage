@@ -16,11 +16,7 @@ export function BrandMark({
 
   return (
     <span className="inline-flex items-center gap-2.5 sm:gap-3 select-none">
-      <span
-        className={`inline-flex shrink-0 items-center justify-center ${
-          isDark ? "rounded-lg bg-[#FAF9F6] px-1.5 py-1" : ""
-        }`}
-      >
+      <span className="inline-flex shrink-0 items-center justify-center">
         <Image
           src="/images/logo-ukrvoyazh.webp"
           alt={name}

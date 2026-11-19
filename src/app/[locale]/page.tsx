@@ -41,7 +41,7 @@ export default async function HomePage({
   return (
     <>
       {/* Asymmetric Split Hero + Floating Horizontal Quick Booking */}
-      <section className="relative border-b border-[#E6EDF7] bg-white pb-12 pt-8 sm:pb-16 sm:pt-10 lg:pb-20 lg:pt-12">
+      <section className="relative border-b border-[#E6EDF7] bg-white pb-10 pt-5 sm:pb-16 sm:pt-10 lg:pb-20 lg:pt-12">
         {/* Clipped background accents wrapper so popovers from HeroQuickBooking are never clipped */}
         <div
           aria-hidden="true"
@@ -52,31 +52,31 @@ export default async function HomePage({
         </div>
 
         <div className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
+          <div className="grid grid-cols-1 items-center gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-10">
             {/* Left column: Display Title + Concise Subtitle + 3 Feature Trust Pills */}
             <div className="lg:col-span-6">
-              <h1 className="font-display text-[30px] font-bold leading-[1.1] text-[#0D1E3B] sm:text-[40px] lg:text-[44px] xl:text-[48px]">
+              <h1 className="font-display text-[28px] font-bold leading-[1.1] text-[#0D1E3B] sm:text-[40px] lg:text-[44px] xl:text-[48px]">
                 {dict.hero.title}
               </h1>
-              <p className="mt-5 max-w-[470px] text-[15px] leading-[1.6] text-[#475467] sm:text-[17px]">
+              <p className="mt-4 max-w-[470px] text-[15px] leading-[1.55] text-[#475467] sm:mt-5 sm:text-[17px] sm:leading-[1.6]">
                 {dict.hero.subtitle}
               </p>
 
-              <div className="mt-7 flex flex-wrap items-center gap-3">
+              <div className="mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:flex sm:flex-wrap sm:items-center sm:gap-3">
                 {dict.hero.highlights.map((item) => {
                   const IconComponent = HIGHLIGHT_ICONS[item.id];
                   return (
                     <div
                       key={item.id}
-                      className="flex items-center gap-3 rounded-[20px] border border-[#E6EEF9] bg-[#F4F8FE] px-4 py-3"
+                      className="flex min-w-0 items-center gap-1.5 rounded-2xl border border-[#E6EEF9] bg-[#F4F8FE] px-2.5 py-2.5 sm:gap-3 sm:rounded-[20px] sm:px-4 sm:py-3"
                     >
                       <IconComponent
-                        className="h-5 w-5 shrink-0 text-[#1E4A8F] sm:h-6 sm:w-6"
+                        className="h-4 w-4 shrink-0 text-[#1E4A8F] sm:h-6 sm:w-6"
                         aria-hidden="true"
                       />
-                      <span className="text-[13px] font-semibold leading-[1.25] text-[#0F1B2E]">
-                        <span className="block">{item.line1}</span>
-                        <span className="block">{item.line2}</span>
+                      <span className="min-w-0 text-[11px] font-semibold leading-[1.2] text-[#0F1B2E] sm:text-[13px] sm:leading-[1.25]">
+                        <span className="block truncate">{item.line1}</span>
+                        <span className="block truncate">{item.line2}</span>
                       </span>
                     </div>
                   );

@@ -14,7 +14,7 @@ export const enDictionary: Dictionary = {
     about: "About",
     contacts: "Contacts",
     booking: "Booking",
-    demoRequests: "DEMO: Requests Log",
+    demoRequests: "Requests Log",
     privacy: "Privacy Policy",
     openMenu: "Open menu",
     closeMenu: "Close menu",
@@ -61,7 +61,7 @@ export const enDictionary: Dictionary = {
     passengersPresetsLabel: "Quick select",
     submitCta: "Continue booking",
     quickRoutesLabel: "Sample corridors:",
-    operatorNote: "Final pricing is confirmed by an operator (no online card payment in demo)",
+    operatorNote: "Final pricing is confirmed by an operator",
     routeRequiredError: "Please enter both pickup and destination locations.",
     pastDateError: "Please pick today or a future date.",
   },
@@ -338,7 +338,7 @@ export const enDictionary: Dictionary = {
     stepOf: "Step",
     backBtn: "Back",
     nextBtn: "Continue",
-    submitBtn: "Submit request (DEMO)",
+    submitBtn: "Submit request",
     submittingBtn: "Submitting request...",
     editStep: "Edit",
     tripTypes: {
@@ -458,10 +458,10 @@ export const enDictionary: Dictionary = {
       fixFieldsBanner: "Please review the highlighted fields before continuing.",
     },
     confirmation: {
-      badge: "Request received (DEMO)",
+      badge: "Request received",
       title: "Your ride request has been submitted",
       subtitle:
-        "Your inquiry is recorded in the demo dispatch log. An operator will verify route availability and contact you to confirm the fare and vehicle assignment.",
+        "Your inquiry is recorded in the dispatch log. An operator will verify route availability and contact you to confirm the fare and vehicle assignment.",
       referenceLabel: "Reference ID",
       copyReference: "Copy ID",
       copiedReference: "Copied",
@@ -476,22 +476,22 @@ export const enDictionary: Dictionary = {
         "We reach out via your chosen contact channel to confirm pricing and exact pickup timing.",
         "Once you approve the offer, the operator marks the trip as confirmed.",
       ],
-      openDemoLogCta: "View in DEMO Requests Log",
+      openDemoLogCta: "View in Requests Log",
       newRequestCta: "Submit another request",
       backHomeCta: "Back to home",
     },
   },
   demoRequestsPage: {
-    badge: "Demo operator workspace preview",
-    title: "Requests Log (DEMO)",
-    lead: "Interactive preview of the operator workflow from the technical specification: inspect submitted individual & group inquiries, filter by status, and advance lifecycle statuses with audit history.",
+    badge: "Operator workspace",
+    title: "Requests Log",
+    lead: "Inspect submitted individual & group inquiries, filter by status, and advance lifecycle statuses with audit history.",
     syncNote:
-      "Demo mode: combines sample pre-loaded inquiries with any requests submitted in your current browser session.",
+      "Combines pre-loaded sample inquiries with any requests submitted in your current browser session.",
     searchPlaceholder: "Search by reference ID, city, or client name...",
     filterAllTypes: "All formats",
     filterAllStatuses: "All statuses",
     emptyTitle: "No requests match these filters",
-    emptyBody: "Adjust your search query or create a new demo booking request.",
+    emptyBody: "Adjust your search query or create a new booking request.",
     createFirstCta: "Create ride request",
     columns: {
       reference: "Reference",
@@ -514,21 +514,21 @@ export const enDictionary: Dictionary = {
       cancelled: "Cancelled",
       declined: "Declined",
     },
-    sampleTag: "Demo sample",
+    sampleTag: "Sample",
     submittedTag: "Your submission",
-    resetDemoBtn: "Clear my submitted demo requests",
+    resetDemoBtn: "Clear my submitted requests",
   },
   privacyPage: {
-    title: "Privacy Policy (DEMO Template)",
+    title: "Privacy Policy",
     draftNotice:
-      "This page is a demonstration template for UX verification. Before production launch, legal wording and retention periods must be approved by the company's legal counsel.",
-    updatedLabel: "Template version: v1.0-demo · November 19, 2026",
+      "Before production launch, legal wording and retention periods must be approved by the company's legal counsel.",
+    updatedLabel: "Version: v1.0 · November 19, 2026",
     sections: [
       {
         heading: "1. Data minimization in trip requests",
         body: [
           "The booking module collects only the contact and itinerary details needed to evaluate and coordinate a passenger trip (name, phone number or preferred messaging channel, origin, destination, date/time, passenger count, and optional notes).",
-          "Passport numbers and payment card details are not requested or collected in this demonstration booking flow.",
+          "Passport numbers and payment card details are not requested or collected in the booking flow.",
         ],
       },
       {
@@ -563,48 +563,48 @@ export const enDictionary: Dictionary = {
     servicesTitle: "Directions",
     contactsTitle: "Contacts",
     demoBanner:
-      "Interactive DEMO build for UkrVoyazh. Live card payments, real-time GPS tracking, and automated driver dispatch are not included.",
-    copyright: "© UkrVoyazh · Passenger Transportation Web Platform Demo",
+      "All trip inquiries are individually reviewed and confirmed by an UkrVoyazh dispatch operator.",
+    copyright: "© UkrVoyazh · Passenger Transportation Across Ukraine & Abroad",
   },
   meta: {
     home: {
-      title: "UkrVoyazh — Charter Passenger Rides in Kyiv, Ukraine & Abroad (DEMO)",
+      title: "UkrVoyazh — Charter Passenger Rides in Kyiv, Ukraine & Abroad",
       description:
         "Individual transfers and group passenger charters with online booking request: select comfort tier, route, and schedule with operator confirmation.",
     },
     services: {
-      title: "Services & Routes — UkrVoyazh (DEMO)",
+      title: "Services & Routes — UkrVoyazh",
       description:
         "Individual transfers and group passenger charters across city, intercity Ukraine, and European routes.",
     },
     fleet: {
-      title: "Transport Categories — UkrVoyazh (DEMO)",
+      title: "Transport Categories — UkrVoyazh",
       description:
         "Vehicle comfort categories from Comfort Sedan to 50-seat Touring Coach without misleading stock photos.",
     },
     booking: {
-      title: "Book a Ride — UkrVoyazh (DEMO)",
+      title: "Book a Ride — UkrVoyazh",
       description:
         "Interactive individual and group passenger ride booking form with validation and confirmation screen.",
     },
     about: {
-      title: "About — UkrVoyazh (DEMO)",
+      title: "About — UkrVoyazh",
       description:
         "UkrVoyazh service principles, comfort and safety focus, company legal summary, and Telegram bot context.",
     },
     contacts: {
-      title: "Contacts — UkrVoyazh (DEMO)",
+      title: "Contacts — UkrVoyazh",
       description:
         "Dispatch phone numbers, @UkrVoyazh_bot on Telegram, Viber, and WhatsApp channels.",
     },
     privacy: {
-      title: "Privacy Policy — UkrVoyazh (DEMO)",
-      description: "Demonstration privacy notice for trip inquiry processing.",
+      title: "Privacy Policy — UkrVoyazh",
+      description: "Privacy notice for trip inquiry processing.",
     },
     demoRequests: {
-      title: "DEMO: Operator Requests Log — UkrVoyazh",
+      title: "Operator Requests Log — UkrVoyazh",
       description:
-        "Demonstration dispatch console to review requests and update booking statuses.",
+        "Dispatch console to review requests and update booking statuses.",
     },
   },
 };
