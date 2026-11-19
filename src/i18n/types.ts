@@ -42,6 +42,11 @@ export interface Dictionary {
   hero: {
     title: string;
     subtitle: string;
+    highlights: Array<{
+      id: "fleet" | "drivers" | "support";
+      line1: string;
+      line2: string;
+    }>;
     operatorQuoteNote: string;
     fleetDisclaimerNote: string;
     illustrationAlt: string;
@@ -52,12 +57,17 @@ export interface Dictionary {
     groupTab: string;
     geographyLabel: string;
     geographies: Record<GeographyType, string>;
+    originLabel: string;
+    originShortPlaceholder: string;
     originPlaceholder: string;
+    destinationLabel: string;
+    destinationShortPlaceholder: string;
     destinationPlaceholder: string;
     swapAria: string;
     dateLabel: string;
     passengersLabel: string;
     passengersUnit: string;
+    passengersPresetsLabel: string;
     submitCta: string;
     quickRoutesLabel: string;
     operatorNote: string;

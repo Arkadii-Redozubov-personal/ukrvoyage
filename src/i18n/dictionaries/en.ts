@@ -25,7 +25,12 @@ export const enDictionary: Dictionary = {
   hero: {
     title: "Charter passenger rides across Kyiv, Ukraine & international routes",
     subtitle:
-      "Submit an individual transfer or group charter request online in clear guided steps. Our operator reviews your itinerary, vehicle category, and confirms the rate individually.",
+      "Book an individual transfer or group charter online in a convenient guided format.",
+    highlights: [
+      { id: "fleet", line1: "Comfortable", line2: "vehicles" },
+      { id: "drivers", line1: "Reliable", line2: "drivers" },
+      { id: "support", line1: "24/7", line2: "support" },
+    ],
     operatorQuoteNote:
       "Fare and vehicle availability are confirmed individually by the operator.",
     fleetDisclaimerNote:
@@ -43,12 +48,17 @@ export const enDictionary: Dictionary = {
       ukraine: "Across Ukraine",
       international: "International",
     },
+    originLabel: "From",
+    originShortPlaceholder: "(city or address)",
     originPlaceholder: "Pickup city or address",
+    destinationLabel: "To",
+    destinationShortPlaceholder: "(city or address)",
     destinationPlaceholder: "Drop-off city or destination",
     swapAria: "Swap pickup and drop-off points",
     dateLabel: "Departure date",
     passengersLabel: "Passengers",
     passengersUnit: "pax",
+    passengersPresetsLabel: "Quick select",
     submitCta: "Continue booking",
     quickRoutesLabel: "Sample corridors:",
     operatorNote: "Final pricing is confirmed by an operator (no online card payment in demo)",

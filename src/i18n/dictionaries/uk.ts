@@ -25,7 +25,12 @@ export const ukDictionary: Dictionary = {
   hero: {
     title: "Замовні пасажирські поїздки Києвом, Україною та за кордон",
     subtitle:
-      "Оформлюйте індивідуальний трансфер або колективну поїздку онлайн у зручному покроковому форматі. Оператор перевіряє маршрут, клас транспорту та підтверджує вартість індивідуально.",
+      "Оформлюйте індивідуальний трансфер або колективну поїздку онлайн у зручному форматі.",
+    highlights: [
+      { id: "fleet", line1: "Комфортний", line2: "транспорт" },
+      { id: "drivers", line1: "Надійні", line2: "водії" },
+      { id: "support", line1: "Підтримка", line2: "24/7" },
+    ],
     operatorQuoteNote:
       "Вартість і наявність транспорту підтверджує оператор після перевірки заявки.",
     fleetDisclaimerNote:
@@ -43,12 +48,17 @@ export const ukDictionary: Dictionary = {
       ukraine: "По Україні",
       international: "За кордон",
     },
+    originLabel: "Звідки",
+    originShortPlaceholder: "(місто або адреса)",
     originPlaceholder: "Звідки (місто або адреса відправлення)",
+    destinationLabel: "Куди",
+    destinationShortPlaceholder: "(місто або адреса)",
     destinationPlaceholder: "Куди (місто або адреса призначення)",
     swapAria: "Поміняти місцями пункти відправлення та призначення",
     dateLabel: "Дата поїздки",
     passengersLabel: "Пасажирів",
     passengersUnit: "ос.",
+    passengersPresetsLabel: "Швидкий вибір",
     submitCta: "Перейти до оформлення",
     quickRoutesLabel: "Швидкий вибір напрямку:",
     operatorNote: "Фінальна вартість узгоджується з оператором (без онлайн-оплати в демо)",

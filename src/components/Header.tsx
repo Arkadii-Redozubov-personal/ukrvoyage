@@ -84,7 +84,7 @@ export function Header({ locale, dict }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-[#E4E6EC] bg-[#FAF9F6]/95 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-[#E8EEF6] bg-white/95 backdrop-blur-sm">
         <div className="mx-auto flex h-[74px] max-w-[1280px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           <Link
             href={`/${locale}`}
@@ -255,7 +255,7 @@ export function Header({ locale, dict }: HeaderProps) {
             onClick={() => setDrawerOpen(false)}
             aria-hidden="true"
           />
-          <div className="relative z-10 flex h-dvh w-full max-w-[360px] flex-col bg-[#FAF9F6] shadow-2xl">
+          <div className="relative z-10 flex h-dvh w-full max-w-[360px] flex-col bg-[#F8FAFD] shadow-2xl">
             <div className="flex shrink-0 items-center justify-between border-b border-[#E4E6EC] px-5 py-4">
               <BrandMark name={dict.brand.name} slogan={dict.brand.slogan} />
               <button
@@ -344,7 +344,7 @@ export function Header({ locale, dict }: HeaderProps) {
               </div>
             </div>
 
-            <div className="shrink-0 border-t border-[#E4E6EC] bg-[#FAF9F6] px-5 py-4">
+            <div className="shrink-0 border-t border-[#E4E6EC] bg-[#F8FAFD] px-5 py-4">
               <Link
                 href={`/${locale}/booking`}
                 onClick={() => setDrawerOpen(false)}
