@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -32,11 +32,15 @@ import {
 import {
   DEMO_TIMEZONES,
   DIAL_CODES,
+  LOCATION_SUGGESTIONS,
+  matchLocationSuggestions,
   POPULAR_CORRIDORS,
   type GeographyType,
+  type LocationSuggestion,
   type TripType,
 } from "@/data/routes";
 import { BRAND_CHANNELS, BRAND_PHONES } from "@/data/contacts";
+import { LocationAutocompleteDropdown } from "./LocationAutocompleteDropdown";
 import {
   bookingSubmissionSchema,
   cleanPhoneDigits,
@@ -96,6 +100,126 @@ export function BookingWizard({ locale, dict }: BookingWizardProps) {
     null
   );
   const [copiedRef, setCopiedRef] = useState(false);
+
+  const [activeLocationField, setActiveLocationField] = useState<
+    "origin" | "destination" | null
+  >(null);
+  const [isTypingLocation, setIsTypingLocation] = useState<boolean>(false);
+  const [locationActiveIndex, setLocationActiveIndex] = useState<number>(0);
+  const routeInputsRef = useRef<HTMLDivElement>(null);
+
+  const originQuery = useMemo(() => {
+    const val = draft.origin.trim();
+    if (!isTypingLocation) {
+      const isExact = LOCATION_SUGGESTIONS.some(
+        (s) =>
+          s.nameUk.toLowerCase() === val.toLowerCase() ||
+          s.nameEn.toLowerCase() === val.toLowerCase()
+      );
+      if (isExact) return "";
+    }
+    return val;
+  }, [draft.origin, isTypingLocation]);
+
+  const destinationQuery = useMemo(() => {
+    const val = draft.destination.trim();
+    if (!isTypingLocation) {
+      const isExact = LOCATION_SUGGESTIONS.some(
+        (s) =>
+          s.nameUk.toLowerCase() === val.toLowerCase() ||
+          s.nameEn.toLowerCase() === val.toLowerCase()
+      );
+      if (isExact) return "";
+    }
+    return val;
+  }, [draft.destination, isTypingLocation]);
+
+  const originSuggestions = useMemo(
+    () =>
+      matchLocationSuggestions(
+        originQuery,
+        draft.geography,
+        draft.destination.trim()
+      ),
+    [originQuery, draft.geography, draft.destination]
+  );
+
+  const destinationSuggestions = useMemo(
+    () =>
+      matchLocationSuggestions(
+        destinationQuery,
+        draft.geography,
+        draft.origin.trim()
+      ),
+    [destinationQuery, draft.geography, draft.origin]
+  );
+
+  function handleSelectWizardLocation(
+    field: "origin" | "destination",
+    item: LocationSuggestion
+  ) {
+    const label = locale === "uk" ? item.nameUk : item.nameEn;
+    const patch: {
+      origin?: string;
+      destination?: string;
+      geography?: GeographyType;
+    } = { [field]: label };
+    if (item.scope === "international") {
+      patch.geography = "international";
+    }
+    updateDraft(patch);
+    setErrors((p) => ({ ...p, [field]: undefined }));
+    setActiveLocationField(null);
+    setIsTypingLocation(false);
+  }
+
+  function handleWizardLocationKeyDown(
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: "origin" | "destination",
+    list: LocationSuggestion[]
+  ) {
+    if (activeLocationField !== field) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (list.length > 0) {
+        setLocationActiveIndex((prev) => (prev + 1) % list.length);
+      }
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (list.length > 0) {
+        setLocationActiveIndex((prev) => (prev - 1 + list.length) % list.length);
+      }
+    } else if (e.key === "Enter") {
+      if (list.length > 0 && list[locationActiveIndex]) {
+        e.preventDefault();
+        handleSelectWizardLocation(field, list[locationActiveIndex]);
+      }
+    } else if (e.key === "Escape") {
+      setActiveLocationField(null);
+    }
+  }
+
+  useEffect(() => {
+    function handleOutside(e: MouseEvent) {
+      if (
+        routeInputsRef.current &&
+        !routeInputsRef.current.contains(e.target as Node)
+      ) {
+        setActiveLocationField(null);
+      }
+    }
+    function handleEsc(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setActiveLocationField(null);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
+    document.addEventListener("keydown", handleEsc);
+    return () => {
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, []);
 
   // Optional URL prefill when navigated from deep links (only runs when params exist)
   useEffect(() => {
@@ -882,9 +1006,12 @@ export function BookingWizard({ locale, dict }: BookingWizardProps) {
 
               {/* Connected Origin & Destination inputs */}
               <div className="space-y-3">
-                <div className="relative rounded-2xl border border-[#E4E6EC] bg-[#FAF9F6] p-3">
+                <div
+                  ref={routeInputsRef}
+                  className="relative rounded-2xl border border-[#E4E6EC] bg-[#FAF9F6] p-3"
+                >
                   <div className="space-y-3 pr-12">
-                    <div>
+                    <div className="relative">
                       <label
                         htmlFor="booking-origin"
                         className="mb-1 flex items-center gap-2 text-xs font-semibold text-[#475467]"
@@ -898,16 +1025,50 @@ export function BookingWizard({ locale, dict }: BookingWizardProps) {
                       <input
                         id="booking-origin"
                         type="text"
+                        autoComplete="off"
                         value={draft.origin}
+                        onFocus={() => {
+                          setActiveLocationField("origin");
+                          setIsTypingLocation(false);
+                          setLocationActiveIndex(0);
+                        }}
                         onChange={(e) => {
                           updateDraft({ origin: e.target.value });
+                          setActiveLocationField("origin");
+                          setIsTypingLocation(true);
+                          setLocationActiveIndex(0);
                           setErrors((p) => ({ ...p, origin: undefined }));
                         }}
+                        onKeyDown={(e) =>
+                          handleWizardLocationKeyDown(
+                            e,
+                            "origin",
+                            originSuggestions
+                          )
+                        }
                         placeholder={dict.bookingWizard.originPlaceholder}
                         aria-invalid={Boolean(errors.origin)}
+                        aria-autocomplete="list"
                         className={`h-11 w-full rounded-xl border bg-white px-3.5 text-sm font-medium text-[#101828] ${
                           errors.origin ? "border-[#C42B1C]" : "border-[#E4E6EC]"
                         }`}
+                      />
+                      <LocationAutocompleteDropdown
+                        open={activeLocationField === "origin"}
+                        locale={locale}
+                        query={originQuery}
+                        currentValue={draft.origin}
+                        suggestions={originSuggestions}
+                        activeIndex={locationActiveIndex}
+                        onSelect={(item) =>
+                          handleSelectWizardLocation("origin", item)
+                        }
+                        onUseCustom={(text) => {
+                          updateDraft({ origin: text });
+                          setErrors((p) => ({ ...p, origin: undefined }));
+                          setActiveLocationField(null);
+                        }}
+                        onHoverIndex={setLocationActiveIndex}
                       />
                       {errors.origin ? (
                         <p className="mt-1 text-xs font-medium text-[#C42B1C]">
@@ -916,7 +1077,7 @@ export function BookingWizard({ locale, dict }: BookingWizardProps) {
                       ) : null}
                     </div>
 
-                    <div>
+                    <div className="relative">
                       <label
                         htmlFor="booking-destination"
                         className="mb-1 flex items-center gap-2 text-xs font-semibold text-[#475467]"
@@ -930,18 +1091,52 @@ export function BookingWizard({ locale, dict }: BookingWizardProps) {
                       <input
                         id="booking-destination"
                         type="text"
+                        autoComplete="off"
                         value={draft.destination}
+                        onFocus={() => {
+                          setActiveLocationField("destination");
+                          setIsTypingLocation(false);
+                          setLocationActiveIndex(0);
+                        }}
                         onChange={(e) => {
                           updateDraft({ destination: e.target.value });
+                          setActiveLocationField("destination");
+                          setIsTypingLocation(true);
+                          setLocationActiveIndex(0);
                           setErrors((p) => ({ ...p, destination: undefined }));
                         }}
+                        onKeyDown={(e) =>
+                          handleWizardLocationKeyDown(
+                            e,
+                            "destination",
+                            destinationSuggestions
+                          )
+                        }
                         placeholder={dict.bookingWizard.destinationPlaceholder}
                         aria-invalid={Boolean(errors.destination)}
+                        aria-autocomplete="list"
                         className={`h-11 w-full rounded-xl border bg-white px-3.5 text-sm font-medium text-[#101828] ${
                           errors.destination
                             ? "border-[#C42B1C]"
                             : "border-[#E4E6EC]"
                         }`}
+                      />
+                      <LocationAutocompleteDropdown
+                        open={activeLocationField === "destination"}
+                        locale={locale}
+                        query={destinationQuery}
+                        currentValue={draft.destination}
+                        suggestions={destinationSuggestions}
+                        activeIndex={locationActiveIndex}
+                        onSelect={(item) =>
+                          handleSelectWizardLocation("destination", item)
+                        }
+                        onUseCustom={(text) => {
+                          updateDraft({ destination: text });
+                          setErrors((p) => ({ ...p, destination: undefined }));
+                          setActiveLocationField(null);
+                        }}
+                        onHoverIndex={setLocationActiveIndex}
                       />
                       {errors.destination ? (
                         <p className="mt-1 text-xs font-medium text-[#C42B1C]">

@@ -15,13 +15,17 @@ import {
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import {
+  LOCATION_SUGGESTIONS,
+  matchLocationSuggestions,
   POPULAR_CORRIDORS,
   type GeographyType,
+  type LocationSuggestion,
   type TripType,
 } from "@/data/routes";
 import { recommendVehicleClassForPassengers } from "@/data/fleet";
 import { isTodayOrFutureDate } from "@/lib/booking/schema";
 import { useBookingDraft } from "@/context/BookingDraftContext";
+import { LocationAutocompleteDropdown } from "./LocationAutocompleteDropdown";
 
 interface HeroQuickBookingProps {
   locale: Locale;
@@ -35,11 +39,109 @@ export function HeroQuickBooking({ locale, dict }: HeroQuickBookingProps) {
   const { draft, minDate, updateDraft, swapRoutePoints } = useBookingDraft();
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [passengersOpen, setPassengersOpen] = useState<boolean>(false);
+  const [activeLocationField, setActiveLocationField] = useState<
+    "origin" | "destination" | null
+  >(null);
+  const [isTypingLocation, setIsTypingLocation] = useState<boolean>(false);
+  const [locationActiveIndex, setLocationActiveIndex] = useState<number>(0);
+
   const passengersRef = useRef<HTMLDivElement>(null);
+  const routeBoxRef = useRef<HTMLDivElement>(null);
 
   const quickPresets = useMemo(() => {
     return POPULAR_CORRIDORS.filter((c) => c.id !== "odesa-city").slice(0, 3);
   }, []);
+
+  const originQuery = useMemo(() => {
+    const val = draft.origin.trim();
+    if (!isTypingLocation) {
+      const isExact = LOCATION_SUGGESTIONS.some(
+        (s) =>
+          s.nameUk.toLowerCase() === val.toLowerCase() ||
+          s.nameEn.toLowerCase() === val.toLowerCase()
+      );
+      if (isExact) return "";
+    }
+    return val;
+  }, [draft.origin, isTypingLocation]);
+
+  const destinationQuery = useMemo(() => {
+    const val = draft.destination.trim();
+    if (!isTypingLocation) {
+      const isExact = LOCATION_SUGGESTIONS.some(
+        (s) =>
+          s.nameUk.toLowerCase() === val.toLowerCase() ||
+          s.nameEn.toLowerCase() === val.toLowerCase()
+      );
+      if (isExact) return "";
+    }
+    return val;
+  }, [draft.destination, isTypingLocation]);
+
+  const originSuggestions = useMemo(
+    () =>
+      matchLocationSuggestions(
+        originQuery,
+        draft.geography,
+        draft.destination.trim()
+      ),
+    [originQuery, draft.geography, draft.destination]
+  );
+
+  const destinationSuggestions = useMemo(
+    () =>
+      matchLocationSuggestions(
+        destinationQuery,
+        draft.geography,
+        draft.origin.trim()
+      ),
+    [destinationQuery, draft.geography, draft.origin]
+  );
+
+  function handleSelectLocation(
+    field: "origin" | "destination",
+    item: LocationSuggestion
+  ) {
+    const label = locale === "uk" ? item.nameUk : item.nameEn;
+    const patch: {
+      origin?: string;
+      destination?: string;
+      geography?: GeographyType;
+    } = { [field]: label };
+    if (item.scope === "international") {
+      patch.geography = "international";
+    }
+    updateDraft(patch);
+    if (errorMsg) setErrorMsg("");
+    setActiveLocationField(null);
+    setIsTypingLocation(false);
+  }
+
+  function handleLocationKeyDown(
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: "origin" | "destination",
+    list: LocationSuggestion[]
+  ) {
+    if (activeLocationField !== field) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (list.length > 0) {
+        setLocationActiveIndex((prev) => (prev + 1) % list.length);
+      }
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (list.length > 0) {
+        setLocationActiveIndex((prev) => (prev - 1 + list.length) % list.length);
+      }
+    } else if (e.key === "Enter") {
+      if (list.length > 0 && list[locationActiveIndex]) {
+        e.preventDefault();
+        handleSelectLocation(field, list[locationActiveIndex]);
+      }
+    } else if (e.key === "Escape") {
+      setActiveLocationField(null);
+    }
+  }
 
   useEffect(() => {
     function handleOutside(e: MouseEvent) {
@@ -49,10 +151,17 @@ export function HeroQuickBooking({ locale, dict }: HeroQuickBookingProps) {
       ) {
         setPassengersOpen(false);
       }
+      if (
+        routeBoxRef.current &&
+        !routeBoxRef.current.contains(e.target as Node)
+      ) {
+        setActiveLocationField(null);
+      }
     }
     function handleEsc(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setPassengersOpen(false);
+        setActiveLocationField(null);
       }
     }
     document.addEventListener("mousedown", handleOutside);
@@ -185,34 +294,67 @@ export function HeroQuickBooking({ locale, dict }: HeroQuickBookingProps) {
         {/* Row 2: Horizontal Inline Search Bar */}
         <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:flex lg:items-stretch lg:gap-3">
           {/* Origin + Destination Pair with Swap Control */}
-          <div className="relative grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-2 md:col-span-2 lg:min-w-0 lg:flex-1">
+          <div
+            ref={routeBoxRef}
+            className="relative grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-2 md:col-span-2 lg:min-w-0 lg:flex-1"
+          >
             {/* Origin */}
-            <div className="flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#E4ECF6] bg-white px-4 py-2 transition-colors focus-within:border-[#24508F] focus-within:ring-2 focus-within:ring-[#24508F]/10 sm:pr-5">
-              <MapPin
-                className="h-[18px] w-[18px] shrink-0 text-[#1F498E]"
-                aria-hidden="true"
-              />
-              <div className="min-w-0 flex-1">
-                <label
-                  htmlFor="hero-origin"
-                  className="block text-[13px] font-semibold leading-tight text-[#0F1B2E]"
-                >
-                  {dict.quickBooking.originLabel}
-                </label>
-                <input
-                  id="hero-origin"
-                  name="origin"
-                  type="text"
-                  value={draft.origin}
-                  onChange={(e) => {
-                    updateDraft({ origin: e.target.value });
-                    if (errorMsg) setErrorMsg("");
-                  }}
-                  placeholder={dict.quickBooking.originShortPlaceholder}
-                  aria-label={dict.quickBooking.originPlaceholder}
-                  className="mt-0.5 w-full bg-transparent text-[13px] font-medium text-[#101828] placeholder:text-[#667085] focus:outline-none"
+            <div className="relative">
+              <div className="flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#E4ECF6] bg-white px-4 py-2 transition-colors focus-within:border-[#24508F] focus-within:ring-2 focus-within:ring-[#24508F]/10 sm:pr-5">
+                <MapPin
+                  className="h-[18px] w-[18px] shrink-0 text-[#1F498E]"
+                  aria-hidden="true"
                 />
+                <div className="min-w-0 flex-1">
+                  <label
+                    htmlFor="hero-origin"
+                    className="block text-[13px] font-semibold leading-tight text-[#0F1B2E]"
+                  >
+                    {dict.quickBooking.originLabel}
+                  </label>
+                  <input
+                    id="hero-origin"
+                    name="origin"
+                    type="text"
+                    autoComplete="off"
+                    value={draft.origin}
+                    onFocus={() => {
+                      setActiveLocationField("origin");
+                      setIsTypingLocation(false);
+                      setLocationActiveIndex(0);
+                    }}
+                    onChange={(e) => {
+                      updateDraft({ origin: e.target.value });
+                      setActiveLocationField("origin");
+                      setIsTypingLocation(true);
+                      setLocationActiveIndex(0);
+                      if (errorMsg) setErrorMsg("");
+                    }}
+                    onKeyDown={(e) =>
+                      handleLocationKeyDown(e, "origin", originSuggestions)
+                    }
+                    placeholder={dict.quickBooking.originShortPlaceholder}
+                    aria-label={dict.quickBooking.originPlaceholder}
+                    aria-autocomplete="list"
+                    className="mt-0.5 w-full bg-transparent text-[13px] font-medium text-[#101828] placeholder:text-[#667085] focus:outline-none"
+                  />
+                </div>
               </div>
+
+              <LocationAutocompleteDropdown
+                open={activeLocationField === "origin"}
+                locale={locale}
+                query={originQuery}
+                currentValue={draft.origin}
+                suggestions={originSuggestions}
+                activeIndex={locationActiveIndex}
+                onSelect={(item) => handleSelectLocation("origin", item)}
+                onUseCustom={(text) => {
+                  updateDraft({ origin: text });
+                  setActiveLocationField(null);
+                }}
+                onHoverIndex={setLocationActiveIndex}
+              />
             </div>
 
             {/* Swap button centered on the seam (vertical on mobile, horizontal on sm+) */}
@@ -227,32 +369,66 @@ export function HeroQuickBooking({ locale, dict }: HeroQuickBookingProps) {
             </button>
 
             {/* Destination */}
-            <div className="flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#E4ECF6] bg-white px-4 py-2 transition-colors focus-within:border-[#24508F] focus-within:ring-2 focus-within:ring-[#24508F]/10 sm:pl-5">
-              <MapPin
-                className="h-[18px] w-[18px] shrink-0 text-[#1F498E]"
-                aria-hidden="true"
-              />
-              <div className="min-w-0 flex-1">
-                <label
-                  htmlFor="hero-destination"
-                  className="block text-[13px] font-semibold leading-tight text-[#0F1B2E]"
-                >
-                  {dict.quickBooking.destinationLabel}
-                </label>
-                <input
-                  id="hero-destination"
-                  name="destination"
-                  type="text"
-                  value={draft.destination}
-                  onChange={(e) => {
-                    updateDraft({ destination: e.target.value });
-                    if (errorMsg) setErrorMsg("");
-                  }}
-                  placeholder={dict.quickBooking.destinationShortPlaceholder}
-                  aria-label={dict.quickBooking.destinationPlaceholder}
-                  className="mt-0.5 w-full bg-transparent text-[13px] font-medium text-[#101828] placeholder:text-[#667085] focus:outline-none"
+            <div className="relative">
+              <div className="flex min-h-[64px] items-center gap-3 rounded-2xl border border-[#E4ECF6] bg-white px-4 py-2 transition-colors focus-within:border-[#24508F] focus-within:ring-2 focus-within:ring-[#24508F]/10 sm:pl-5">
+                <MapPin
+                  className="h-[18px] w-[18px] shrink-0 text-[#1F498E]"
+                  aria-hidden="true"
                 />
+                <div className="min-w-0 flex-1">
+                  <label
+                    htmlFor="hero-destination"
+                    className="block text-[13px] font-semibold leading-tight text-[#0F1B2E]"
+                  >
+                    {dict.quickBooking.destinationLabel}
+                  </label>
+                  <input
+                    id="hero-destination"
+                    name="destination"
+                    type="text"
+                    autoComplete="off"
+                    value={draft.destination}
+                    onFocus={() => {
+                      setActiveLocationField("destination");
+                      setIsTypingLocation(false);
+                      setLocationActiveIndex(0);
+                    }}
+                    onChange={(e) => {
+                      updateDraft({ destination: e.target.value });
+                      setActiveLocationField("destination");
+                      setIsTypingLocation(true);
+                      setLocationActiveIndex(0);
+                      if (errorMsg) setErrorMsg("");
+                    }}
+                    onKeyDown={(e) =>
+                      handleLocationKeyDown(
+                        e,
+                        "destination",
+                        destinationSuggestions
+                      )
+                    }
+                    placeholder={dict.quickBooking.destinationShortPlaceholder}
+                    aria-label={dict.quickBooking.destinationPlaceholder}
+                    aria-autocomplete="list"
+                    className="mt-0.5 w-full bg-transparent text-[13px] font-medium text-[#101828] placeholder:text-[#667085] focus:outline-none"
+                  />
+                </div>
               </div>
+
+              <LocationAutocompleteDropdown
+                open={activeLocationField === "destination"}
+                locale={locale}
+                query={destinationQuery}
+                currentValue={draft.destination}
+                suggestions={destinationSuggestions}
+                activeIndex={locationActiveIndex}
+                onSelect={(item) => handleSelectLocation("destination", item)}
+                onUseCustom={(text) => {
+                  updateDraft({ destination: text });
+                  setActiveLocationField(null);
+                }}
+                onHoverIndex={setLocationActiveIndex}
+              />
             </div>
           </div>
 
