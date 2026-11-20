@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     globalNotFound: true,
   },
   images: {
-    formats: ["image/avif", "image/webp"],
+    unoptimized: true,
   },
   turbopack: {
     rules: {

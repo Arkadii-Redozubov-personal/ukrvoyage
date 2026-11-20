@@ -20,9 +20,10 @@ export function BrandMark({
         <Image
           src="/images/logo-ukrvoyazh.webp"
           alt={name}
-          width={460}
-          height={277}
-          priority
+          width={132}
+          height={80}
+          priority={!isDark}
+          sizes="72px"
           className="h-9 w-auto object-contain sm:h-10"
         />
       </span>
