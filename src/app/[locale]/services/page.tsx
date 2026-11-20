@@ -73,13 +73,13 @@ export default async function ServicesPage({
             {/* Frameless transparent illustration integrated directly on the white canvas */}
             <div className="relative flex items-center justify-center lg:col-span-6 lg:justify-end">
               <Image
-                src="/images/services-frameless-v2.webp"
+                src="/images/header-services-spot.webp"
                 alt={dict.servicesPage.title}
-                width={1240}
-                height={740}
+                width={1251}
+                height={696}
                 priority
-                sizes="(max-width: 1024px) 100vw, 45vw"
-                className="h-auto max-h-[220px] w-full max-w-[460px] object-contain sm:max-h-[250px] lg:max-h-[270px]"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="h-auto max-h-[260px] w-full max-w-[540px] object-contain sm:max-h-[300px] lg:max-h-[325px] lg:max-w-[570px]"
               />
             </div>
           </div>
